@@ -17,6 +17,13 @@ const char keypad[NUM_ROW * NUM_COL] = {
 	'*', '0', '#', 'D'
 };
 
+const uint8_t keypadValue[NUM_ROW * NUM_COL] = {
+	0x1, 0x2, 0x3, 0xA,
+	0x4, 0x5, 0x6, 0xB,
+	0x7, 0x8, 0x9, 0xC,
+	0xE, 0x0, 0xF, 0xD
+};
+
 int8_t keypadLoop();
 
 int main() {
@@ -46,7 +53,7 @@ int main() {
 		button = keypadLoop();
 		if (button != -1) {
 			LED_PORT->ODR &= 0xFFFFFFF0;
-			LED_PORT->ODR |= 0x0F & button;
+			LED_PORT->ODR |= 0x0F & keypadValue[button];
 		}
 		for (delay = 0; delay < 0xFFFF; delay++);
 	}
