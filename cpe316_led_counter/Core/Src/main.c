@@ -28,7 +28,7 @@ int main() {
 		GPIOC->ODR |= (0x000F & count);
 
 		// delay
-		for (delay = 0; delay < 1000; delay++);
+		for (delay = 0; delay < 100000; delay++);
 
 		// reset count to 0 when > 0xF
 		if (++count > 0x000F) {
