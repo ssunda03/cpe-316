@@ -1,17 +1,21 @@
 #include "main.h"
 
+// 4,000,000 in hex; makes UIF trigger every second
+#define COUNT 0x003D0900
+
 void TIM2_IRQHandler();
-void PartA();
+void PartAWOCCR();
 void PartACCR();
+void PartB();
 
 volatile uint8_t WAVE_STATE;
 
 int main() {
-
-	PartA();
+	//PartACCR();
+	PartB();
 }
 
-void PartA() {
+void PartAWOCCR() {
 	// clock and timer configuration
 	RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;
 	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
@@ -65,10 +69,11 @@ void PartACCR() {
 	WAVE_STATE = 0;
 
 	// Output Frequency = Clock Frequency / ((PSC + 1) * (ARR + 1))
-	TIM2->PSC = 99;
-	TIM2->ARR = 0xFFFFFFFF;
+	TIM2->PSC = 0;
+	TIM2->ARR = 799;
 	// enable interrupt
-	TIM2->DIER |= TIM_DIER_CCR1IE;
+	TIM2->DIER |= TIM_DIER_CC1IE | TIM_DIER_UIE;
+	TIM2->CCR1 = 599;
 
 	// enable interrupts
 	// ARM Core
@@ -83,17 +88,62 @@ void PartACCR() {
 
 	while (1) {
 		if (WAVE_STATE == 1) {
-			GPIOA->BSRR = GPIO_BSRR_BR5;
+			GPIOA->BSRR = GPIO_BSRR_BS5;
 			WAVE_STATE = 0;
 		}
 		else if (WAVE_STATE == 2) {
-			GPIOA->BSRR = GPIO_BSRR_BS5;
+			GPIOA->BSRR = GPIO_BSRR_BR5;
 			WAVE_STATE = 0;
 		}
 	}
 }
 
-void TIM2_IRQHandler() {
+void PartB() {
+	// clock and timer configuration
+	RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+
+	// set LED to waveform
+	GPIOA->MODER &= ~GPIO_MODER_MODE5;
+	GPIOA->MODER |= GPIO_MODER_MODE5_0;
+	GPIOA->ODR &= ~GPIO_PIN_5;
+
+	// Output Frequency = Clock Frequency / ((PSC + 1) * (ARR + 1))
+	TIM2->PSC = 0;
+	TIM2->ARR = COUNT - 1;
+
+	// set timer in upcounting mode
+	TIM2->CR1 &= ~TIM_CR1_CMS & ~TIM_CR1_DIR;
+
+	// enable CCR and ARR interrupt
+	TIM2->DIER |= TIM_DIER_UIE | TIM_DIER_CC1IE;
+
+	// clear interrupt flags
+	TIM2->SR &= ~(TIM_SR_UIF | TIM_SR_CC1IF);
+
+	// set CCR to 3/4 of ARR to make a 25% duty cycle
+	TIM2->CCR1 = (COUNT >> 2) * 3 - 1;
+
+	// enable interrupts
+	// ARM Core
+	__enable_irq();
+	//NVIC enable
+	NVIC->ISER[0] = 1 << (TIM2_IRQn & 0x1F); // 28th position on the vector table
+
+	WAVE_STATE = 0;
+	// enable timer
+	TIM2->CR1 |= TIM_CR1_CEN;
+	while (1) {
+		if (WAVE_STATE == 1) {
+			GPIOA->ODR ^= GPIO_PIN_5;
+			WAVE_STATE = 0;
+		}
+	}
+}
+
+/* PART A
+ *
+ * void TIM2_IRQHandler() {
 	static uint8_t cycle = 0;
 
 	if (!cycle) {
@@ -104,6 +154,23 @@ void TIM2_IRQHandler() {
 		WAVE_STATE = 2;
 	}
 
-	TIM2->SR &= ~TIM_SR_UIF;
+	TIM2->SR &= ~TIM_SR_CC1IF;
 	cycle = ++cycle % 4;
+}*/
+
+// PART B
+void TIM2_IRQHandler() {
+	if (TIM2->SR & TIM_SR_UIF) {
+		TIM2->SR &= ~TIM_SR_UIF;
+	}
+
+	else if (TIM2->SR & TIM_SR_CC1IF) {
+		TIM2->SR &= ~TIM_SR_CC1IF;
+	}
+
+	WAVE_STATE = 1;
 }
+
+
+
+
