@@ -11,6 +11,7 @@ void PartB();
 volatile uint8_t WAVE_STATE;
 
 int main() {
+	HAL_Init();
 	//PartACCR();
 	PartB();
 }
@@ -110,19 +111,19 @@ void PartB() {
 
 	// Output Frequency = Clock Frequency / ((PSC + 1) * (ARR + 1))
 	TIM2->PSC = 0;
-	TIM2->ARR = COUNT - 1;
+	TIM2->ARR = 0xFFFFFFFF;
 
 	// set timer in upcounting mode
 	TIM2->CR1 &= ~TIM_CR1_CMS & ~TIM_CR1_DIR;
 
-	// enable CCR and ARR interrupt
-	TIM2->DIER |= TIM_DIER_UIE | TIM_DIER_CC1IE;
+	// enable CCR
+	TIM2->DIER |= TIM_DIER_CC1IE;
 
-	// clear interrupt flags
-	TIM2->SR &= ~(TIM_SR_UIF | TIM_SR_CC1IF);
+	// clear interrupt flag
+	TIM2->SR &= ~TIM_SR_CC1IF;
 
-	// set CCR to 3/4 of ARR to make a 25% duty cycle
-	TIM2->CCR1 = (COUNT >> 2) * 3 - 1;
+	// set CCR to count to 399 for 10kHz interrupts --> 5kHz waveform
+	TIM2->CCR1 = 399;
 
 	// enable interrupts
 	// ARM Core
@@ -136,14 +137,15 @@ void PartB() {
 	while (1) {
 		if (WAVE_STATE == 1) {
 			GPIOA->ODR ^= GPIO_PIN_5;
+			//TIM2->CNT = 0;
+			TIM2->CCR1 += 399;
 			WAVE_STATE = 0;
 		}
 	}
 }
 
-/* PART A
- *
- * void TIM2_IRQHandler() {
+// Part AWOCCR
+/*void TIM2_IRQHandler() {
 	static uint8_t cycle = 0;
 
 	if (!cycle) {
@@ -158,13 +160,22 @@ void PartB() {
 	cycle = ++cycle % 4;
 }*/
 
-// PART B
-void TIM2_IRQHandler() {
-	if (TIM2->SR & TIM_SR_UIF) {
-		TIM2->SR &= ~TIM_SR_UIF;
+// Part AWCCR
+/*void TIM2_IRQHandler() {
+	if (TIM2->SR & TIM_SR_CC1IF) {
+		TIM2->SR &= ~TIM_SR_CC1IF;
+		WAVE_STATE = 1;
 	}
 
-	else if (TIM2->SR & TIM_SR_CC1IF) {
+	else if (TIM2->SR & TIM_SR_UIF) {
+		TIM2->SR &= ~TIM_SR_UIF;
+		WAVE_STATE = 2;
+	}
+}*/
+
+// PART B
+void TIM2_IRQHandler() {
+	if (TIM2->SR & TIM_SR_CC1IF) {
 		TIM2->SR &= ~TIM_SR_CC1IF;
 	}
 
