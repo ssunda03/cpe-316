@@ -78,7 +78,7 @@ int8_t multiplex_keypad()
 		{
 			if(GPIOC->IDR & (1 << row))
 			{
-				return NUM_ROW * row + col;
+				return NUM_COL * row + col;
 			}
 		}
 
