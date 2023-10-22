@@ -1,0 +1,13 @@
+../Core/Src/keypad_12.h:38:8:get_keypad_value	16	static
+../Core/Src/keypad_12.h:51:6:get_keypad_char	16	static
+../Core/Src/keypad_12.h:64:8:loop_keypad_once	16	static
+../Core/Src/keypad_12.h:95:8:multiplex_keypad	16	static
+../Core/Src/keypad_12.h:127:6:keypad_init	4	static
+../Core/Src/dac.h:22:10:DAC_volt_conv	16	static
+../Core/Src/dac.h:29:6:DAC_write	16	static
+../Core/Src/dac.h:36:6:DAC_init	4	static
+../Core/Src/timer2.h:17:6:TIM2_init	24	static,ignoring_inline_asm
+../Core/Src/main.c:32:5:main	24	static
+../Core/Src/main.c:223:6:TIM2_IRQHandler	4	static
+../Core/Src/main.c:245:6:test_DAC	16	static
+../Core/Src/main.c:268:6:sysclk_init	96	static
