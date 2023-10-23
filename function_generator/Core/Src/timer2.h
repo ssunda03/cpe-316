@@ -11,9 +11,9 @@
 #define SRC_TIMER2_H_
 
 
-void TIM2_init(uint32_t arr, uint32_t psc, uint32_t ccr1);
+void TIM2_init(uint32_t arr, uint32_t psc, uint32_t ccr1); // initializes TIM2 with the provided ARR PSC CCR1 values
 
-
+// initializes TIM2 with the provided ARR PSC CCR1 values
 void TIM2_init(uint32_t arr, uint32_t psc, uint32_t ccr1)
 {
 	// enable the clock for TIM2

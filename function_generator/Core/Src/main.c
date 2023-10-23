@@ -1,10 +1,17 @@
+/*
+ * Jack Krammer and Srini Sundararaman
+ * October 22, 2023
+ * CPE 316 Project 1
+ * Function Generator
+ */
+
 #include "main.h"
 #include "keypad_12.h"
 #include "dac.h"
 #include "timer2.h"
-#include "sine_table_DAC_600.h"
-#include "ramp_table_DAC_600.h"
-#include "triangle_table_DAC_600.h"
+#include "sine_table_DAC_600_2.h"
+#include "ramp_table_DAC_600_2.h"
+#include "triangle_table_DAC_600_2.h"
 
 // enums
 typedef enum WAVE_TYPE {
@@ -51,17 +58,6 @@ int main()
 //	GPIOC->MODER |= (1 << GPIO_MODER_MODE8_Pos); // sets PC8 to output
 //	GPIOC->ODR &= ~GPIO_ODR_OD8_Pos;
 
-	// TODO - tasks
-	// make main
-	//	check if ISR flag was set
-	//		change settings in the DAC_send function
-	//	loop through keypad for updates
-	//	need a way of keeping track of the current settings --> global vars
-
-	// make a way to de-bounce the button press
-	// finish loop_keypad_once() function in keypad_12.h file
-	// test the loop_keypad_once() function with a single output val ?
-	// get the mv header files - will be easier to change and get the right voltages
 
 	// wave variables
 	WAVE_TYPE wave = SQUARE;

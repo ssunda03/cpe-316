@@ -26,8 +26,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
  ../Core/Src/keypad_12.h ../Core/Src/dac.h ../Core/Src/timer2.h \
- ../Core/Src/sine_table_DAC_600.h ../Core/Src/ramp_table_DAC_600.h \
- ../Core/Src/triangle_table_DAC_600.h
+ ../Core/Src/sine_table_DAC_600_2.h ../Core/Src/ramp_table_DAC_600_2.h \
+ ../Core/Src/triangle_table_DAC_600_2.h
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -58,6 +58,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Src/keypad_12.h:
 ../Core/Src/dac.h:
 ../Core/Src/timer2.h:
-../Core/Src/sine_table_DAC_600.h:
-../Core/Src/ramp_table_DAC_600.h:
-../Core/Src/triangle_table_DAC_600.h:
+../Core/Src/sine_table_DAC_600_2.h:
+../Core/Src/ramp_table_DAC_600_2.h:
+../Core/Src/triangle_table_DAC_600_2.h:

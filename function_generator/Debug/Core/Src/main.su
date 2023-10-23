@@ -7,7 +7,7 @@
 ../Core/Src/dac.h:29:6:DAC_write	16	static
 ../Core/Src/dac.h:36:6:DAC_init	4	static
 ../Core/Src/timer2.h:17:6:TIM2_init	24	static,ignoring_inline_asm
-../Core/Src/main.c:32:5:main	24	static
-../Core/Src/main.c:223:6:TIM2_IRQHandler	4	static
-../Core/Src/main.c:245:6:test_DAC	16	static
-../Core/Src/main.c:268:6:sysclk_init	96	static
+../Core/Src/main.c:39:5:main	24	static
+../Core/Src/main.c:219:6:TIM2_IRQHandler	4	static
+../Core/Src/main.c:241:6:test_DAC	16	static
+../Core/Src/main.c:264:6:sysclk_init	96	static
